@@ -1,6 +1,7 @@
 package org.example.service;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.example.entities.RefreshToken;
@@ -17,7 +18,7 @@ public class RefreshTokenService {
     @Autowired UserRepository userRepository;
 
     public RefreshToken createRefreshToken(String username) {
-        UserInfo userInfoExtracted = UserRepository.findByUsername(username);
+        UserInfo userInfoExtracted = userRepository.findByUsername(username);
         RefreshToken refreshToken = RefreshToken.builder()
                         .userInfo(userInfoExtracted)
                         .token(UUID.randomUUID().toString())
@@ -32,5 +33,9 @@ public class RefreshTokenService {
             throw new RuntimeException(token.getToken() + " RefreshToken expired. Please Login again!");
         }
         return token;
+    }
+
+    public Optional<RefreshToken> findByToken(String token) {
+        return refreshTokenRepository.findByToken(token);
     }
 }
